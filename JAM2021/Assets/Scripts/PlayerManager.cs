@@ -9,9 +9,8 @@ public class PlayerManager : MonoBehaviour
 
     [Header("Movement")]
     public float speed = 300.0f;
-    public float jumpForce = 300.0f;
     public float dashSpeed = 350.0f;
-    public float startDashTime = 0.0f;
+    
     
     [Header("PhysicsMovement")]
     public float thrust = 400.0f;
@@ -21,28 +20,25 @@ public class PlayerManager : MonoBehaviour
     [Header("Shooting")]
     public float shotRatio = 0.2f;
 
+    float startDashTime = 0.0f;
     float m_dashTime;
     float m_timer = 0.0f;
     float m_invincibleFrame = 0.0f;
-    float x = 0.0f;
 
-    int m_hitPoint = 0;
+    int m_hitPoint = 0; 
+    int m_direction = 1; //1 -> Right      2 -> Left      3 -> Up      4 -> Down
 
     bool m_death = false;
-    bool m_damage = false;
-    bool m_direction = true;
+    bool m_damage = false;    
     bool m_thrust = false;
     bool m_dash = false;
-    bool m_megajump = false;
+    //bool m_megajump = false;
     bool m_bump = false;
 
 
 
     Rigidbody m_rigidbody;
-    SpriteRenderer m_spriteRenderer;
-    Animator m_animator;
-    CapsuleCollider2D m_collider;
-    PolygonCollider2D m_polyCollider;
+    //Animator m_animator;
     inputManager m_inputManager;
     HealthManager  m_healthManager;
     
@@ -51,10 +47,7 @@ public class PlayerManager : MonoBehaviour
         m_inputManager = GameObject.Find("inputManager").GetComponent<inputManager>();
 
         m_rigidbody = GetComponent<Rigidbody>();
-        m_spriteRenderer = GetComponent<SpriteRenderer>();
-        m_animator = GetComponent<Animator>();
-        m_collider = GetComponent<CapsuleCollider2D>();
-        m_polyCollider = GetComponent<PolygonCollider2D>();
+        //m_animator = GetComponent<Animator>();
         m_healthManager = GetComponent<HealthManager>();
     }
 
@@ -73,8 +66,15 @@ public class PlayerManager : MonoBehaviour
             m_isGrounded = false;
         }*/
 
+        //Attack
+        if (m_inputManager.attack)
+        {
+            //m_animator.Play("Attack");
+            Debug.Log("Attack");
+        }
+
         //Dash
-        if(m_inputManager.dash && !Keyboard.current.sKey.isPressed)
+        if (m_inputManager.dash && !Keyboard.current.sKey.isPressed)
         {
             m_dash = true; 
         } 
@@ -94,26 +94,26 @@ public class PlayerManager : MonoBehaviour
 
             else if (m_inputManager.walkLeft || m_inputManager.walkRight || m_inputManager.walkUp || m_inputManager.walkDown)
             {
-                //Left
-                if (m_inputManager.walkLeft)
-                {
-                    m_direction = false;
-                    transform.localScale = new Vector3(-1.0f, 1.0f, 1.0f);
-                    m_rigidbody.velocity = new Vector3(-speed * Time.fixedDeltaTime, m_rigidbody.velocity.y, 0.0f);
-                }
-
                 //Right
                 if (m_inputManager.walkRight)
                 {
-                    m_direction = true;
-                    transform.localScale = new Vector3 (1.0f, 1.0f, 1.0f);
+                    m_direction = 1;
+                    transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
                     m_rigidbody.velocity = new Vector3(speed * Time.fixedDeltaTime, m_rigidbody.velocity.y, 0.0f);
                 }
+
+                //Left
+                if (m_inputManager.walkLeft)
+                {
+                    m_direction = 2;
+                    transform.localScale = new Vector3(-1.0f, 1.0f, 1.0f);
+                    m_rigidbody.velocity = new Vector3(-speed * Time.fixedDeltaTime, m_rigidbody.velocity.y, 0.0f);
+                }                
 
                 //Up
                 if (m_inputManager.walkUp)
                 {
-                    m_direction = false;
+                    m_direction = 3;
                     transform.localScale = new Vector3(-1.0f, 1.0f, 1.0f);
                     m_rigidbody.velocity = new Vector3(0.0f, m_rigidbody.velocity.y, -speed * Time.fixedDeltaTime);
                 }
@@ -121,7 +121,7 @@ public class PlayerManager : MonoBehaviour
                 //Down
                 if (m_inputManager.walkDown)
                 {
-                    m_direction = true;
+                    m_direction = 4;
                     transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
                     m_rigidbody.velocity = new Vector3(0.0f, m_rigidbody.velocity.y, speed * Time.fixedDeltaTime);
                 }
@@ -129,34 +129,32 @@ public class PlayerManager : MonoBehaviour
             else
             {
                 m_rigidbody.velocity = new Vector3(0.0f, m_rigidbody.velocity.y, 0.0f);    
-            }
-           
-            // Pixel Perfect
-            if (m_direction) // Right
-            {
-                x = Mathf.Ceil(transform.position.x);
-            }
-            else // Left
-            {
-                x = Mathf.Floor(transform.position.x);
-            }
-             transform.position = new Vector3(x, transform.position.y, transform.position.z);
+            }            
 
             //Dash
-            if (m_dash && m_dashTime <= 0.0f && !m_direction)
+            if (m_dash && m_dashTime <= 0.0f && m_direction == 1)//Right
             {
                 m_dash = false;
                 m_dashTime = startDashTime;
-                m_rigidbody.velocity = new Vector2(-dashSpeed * Time.fixedDeltaTime, m_rigidbody.velocity.y);
-                
+                m_rigidbody.velocity = new Vector3(dashSpeed * Time.fixedDeltaTime, m_rigidbody.velocity.y, 0.0f);
+            }            
+            else if (m_dash && m_dashTime <= 0.0f && m_direction == 2) //Left
+            {
+                m_dash = false;
+                m_dashTime = startDashTime;
+                m_rigidbody.velocity = new Vector3(-dashSpeed * Time.fixedDeltaTime, m_rigidbody.velocity.y, 0.0f);
             }
-
-            if (m_dash && m_dashTime <= 0.0f && m_direction)
+            else if (m_dash && m_dashTime <= 0.0f && m_direction == 3)//Up
             {
                 m_dash = false;
                 m_dashTime = startDashTime;
-                m_rigidbody.velocity = new Vector2(dashSpeed * Time.fixedDeltaTime, m_rigidbody.velocity.y);
-                
+                m_rigidbody.velocity = new Vector3(0.0f, m_rigidbody.velocity.y, -dashSpeed * Time.fixedDeltaTime);
+            }
+            else if (m_dash && m_dashTime <= 0.0f && m_direction == 4)//Down
+            {
+                m_dash = false;
+                m_dashTime = startDashTime;
+                m_rigidbody.velocity = new Vector3(0.0f, m_rigidbody.velocity.y, dashSpeed * Time.fixedDeltaTime);
             }
             else
             {
@@ -185,7 +183,6 @@ public class PlayerManager : MonoBehaviour
                 if (m_invincibleFrame >= 1.0f)
                 {
                     m_damage = false;
-                    m_polyCollider.enabled = true;
                     m_invincibleFrame = 0.0f;
                 }         
             }
@@ -193,7 +190,7 @@ public class PlayerManager : MonoBehaviour
 
 
             // Animations
-            if (m_rigidbody.velocity.y == 0.0f && !m_damage)
+            /*if (m_rigidbody.velocity.y == 0.0f && !m_damage)
             {
 
                 if (m_rigidbody.velocity.x == 0.0f && !m_damage)
@@ -234,7 +231,7 @@ public class PlayerManager : MonoBehaviour
                     m_animator.Play("Fall");
                     m_megajump = false;
                 }
-            }
+            }*/
         }
         else
         {
@@ -246,7 +243,6 @@ public class PlayerManager : MonoBehaviour
             if (m_timer >= 0.9f)
             {
                 SceneManager.LoadScene("SampleScene");
-                m_polyCollider.enabled = true;
             }
         }
     }
@@ -260,8 +256,7 @@ public class PlayerManager : MonoBehaviour
     //Death
     public void death()
     {
-        m_polyCollider.enabled = false;
-        m_animator.Play("Death");
+        //m_animator.Play("Death");
         m_death = true;        
     }
 
@@ -269,9 +264,8 @@ public class PlayerManager : MonoBehaviour
     public void damage()
     {
         m_healthManager.Health--;
-        m_animator.Play("Damage");
+        //m_animator.Play("Damage");
         m_damage = true;
-        m_polyCollider.enabled = false;
     }
 
     //Megajump

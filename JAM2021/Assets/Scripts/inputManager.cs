@@ -10,7 +10,7 @@ public class inputManager : MonoBehaviour
     [HideInInspector] public bool walkUp = false;
     [HideInInspector] public bool walkDown = false;
     [HideInInspector] public bool dash = false;
-    [HideInInspector] public bool shoot = false;
+    [HideInInspector] public bool attack = false;
     [HideInInspector] public bool crouch = false;
     
 
@@ -85,14 +85,14 @@ public class inputManager : MonoBehaviour
             dash = false;
         }
         
-        //Shoot
+        //Attack
         if(Mouse.current.leftButton.wasPressedThisFrame || GP_shoot)
         {
-            shoot = true;
+            attack = true;
         }
         else
         {
-            shoot = false;
+            attack = false;
         }
 
         //Crouch
