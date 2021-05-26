@@ -30,7 +30,7 @@ public class PlayerManager : MonoBehaviour
     int m_hitPoint = 0; 
     int m_direction = 1; //1 -> Right      2 -> Left      3 -> Up      4 -> Down
 
-    bool m_death = true;
+    bool m_death = false;
     bool m_damage = false;    
     bool m_thrust = false;
     bool m_dash = false;
@@ -67,9 +67,14 @@ public class PlayerManager : MonoBehaviour
             m_isGrounded = false;
         }*/
 
+        //Death
+        if (m_hitPoint >= m_healthManager.numOfHearts)
+            death();
+
         //Attack
         if (m_inputManager.attack)
         {
+            m_hitPoint++;
             //m_animator.Play("Attack");
             Debug.Log("Attack");
         }
