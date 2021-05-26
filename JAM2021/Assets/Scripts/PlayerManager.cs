@@ -8,7 +8,8 @@ public class PlayerManager : MonoBehaviour
 {
 
     [Header("Movement")]
-    public float speed = 300.0f;
+    public float walkspeed = 300.0f;
+    public float runspeed = 300.0f;
     public float dashSpeed = 350.0f;
     
     
@@ -20,6 +21,7 @@ public class PlayerManager : MonoBehaviour
     [Header("Shooting")]
     public float shotRatio = 0.2f;
 
+    float speed = 300.0f;
     float startDashTime = 0.0f;
     float m_dashTime;
     float m_timer = 0.0f;
@@ -28,17 +30,16 @@ public class PlayerManager : MonoBehaviour
     int m_hitPoint = 0; 
     int m_direction = 1; //1 -> Right      2 -> Left      3 -> Up      4 -> Down
 
-    bool m_death = false;
+    bool m_death = true;
     bool m_damage = false;    
     bool m_thrust = false;
     bool m_dash = false;
-    //bool m_megajump = false;
     bool m_bump = false;
 
 
 
     Rigidbody m_rigidbody;
-    //Animator m_animator;
+    Animator m_animator;
     inputManager m_inputManager;
     HealthManager  m_healthManager;
     
@@ -47,7 +48,7 @@ public class PlayerManager : MonoBehaviour
         m_inputManager = GameObject.Find("inputManager").GetComponent<inputManager>();
 
         m_rigidbody = GetComponent<Rigidbody>();
-        //m_animator = GetComponent<Animator>();
+        m_animator = GetComponent<Animator>();
         m_healthManager = GetComponent<HealthManager>();
     }
 
@@ -74,7 +75,7 @@ public class PlayerManager : MonoBehaviour
         }
 
         //Dash
-        if (m_inputManager.dash && !Keyboard.current.sKey.isPressed)
+        if (m_inputManager.dash)
         {
             m_dash = true; 
         } 
@@ -89,72 +90,117 @@ public class PlayerManager : MonoBehaviour
 
             if (m_inputManager.walkLeft && m_inputManager.walkRight || m_inputManager.walkUp && m_inputManager.walkDown)
             {
+                m_animator.Play("Idle");
                 m_rigidbody.velocity = new Vector3(0.0f, 0.0f, 0.0f);
             }
-
             else if (m_inputManager.walkLeft || m_inputManager.walkRight || m_inputManager.walkUp || m_inputManager.walkDown)
             {
                 //Right
                 if (m_inputManager.walkRight)
                 {
+                    if (m_inputManager.run)
+                    {
+                        m_animator.Play("Run");
+                        speed = runspeed;
+                    }
+                    else
+                    {
+                        m_animator.Play("Skip");
+                        speed = walkspeed;
+                    }
                     m_direction = 1;
-                    transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
+                    transform.eulerAngles = new Vector3(0.0f, 90.0f, 0.0f);
                     m_rigidbody.velocity = new Vector3(speed * Time.fixedDeltaTime, m_rigidbody.velocity.y, 0.0f);
                 }
 
                 //Left
                 if (m_inputManager.walkLeft)
                 {
+                    if (m_inputManager.run)
+                    {
+                        m_animator.Play("Run");
+                        speed = runspeed;
+                    }
+                    else
+                    {
+                        m_animator.Play("Skip");
+                        speed = walkspeed;
+                    }
                     m_direction = 2;
-                    transform.localScale = new Vector3(-1.0f, 1.0f, 1.0f);
+                    transform.eulerAngles = new Vector3(0.0f, 270.0f, 0.0f);
                     m_rigidbody.velocity = new Vector3(-speed * Time.fixedDeltaTime, m_rigidbody.velocity.y, 0.0f);
                 }                
 
                 //Up
                 if (m_inputManager.walkUp)
                 {
+                    if (m_inputManager.run)
+                    {
+                        m_animator.Play("Run");
+                        speed = runspeed;
+                    }
+                    else
+                    {
+                        m_animator.Play("Skip");
+                        speed = walkspeed;
+                    }
                     m_direction = 3;
-                    transform.localScale = new Vector3(-1.0f, 1.0f, 1.0f);
-                    m_rigidbody.velocity = new Vector3(0.0f, m_rigidbody.velocity.y, -speed * Time.fixedDeltaTime);
+                    transform.eulerAngles = new Vector3(0.0f, 0.0f, 0.0f);
+                    m_rigidbody.velocity = new Vector3(0.0f, m_rigidbody.velocity.y, speed * Time.fixedDeltaTime);
                 }
 
                 //Down
                 if (m_inputManager.walkDown)
                 {
+                    if (m_inputManager.run)
+                    {
+                        m_animator.Play("Run");
+                        speed = runspeed;
+                    }
+                    else
+                    {
+                        m_animator.Play("Skip");
+                        speed = walkspeed;
+                    }
                     m_direction = 4;
-                    transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
-                    m_rigidbody.velocity = new Vector3(0.0f, m_rigidbody.velocity.y, speed * Time.fixedDeltaTime);
+                    transform.eulerAngles = new Vector3(0.0f, 180.0f, 0.0f);
+                    m_rigidbody.velocity = new Vector3(0.0f, m_rigidbody.velocity.y, -speed * Time.fixedDeltaTime);
                 }
             }
             else
             {
+                m_animator.Play("Idle");
                 m_rigidbody.velocity = new Vector3(0.0f, m_rigidbody.velocity.y, 0.0f);    
             }            
 
             //Dash
-            if (m_dash && m_dashTime <= 0.0f && m_direction == 1)//Right
+            if (m_dash && m_direction == 1)//Right
             {
+                m_animator.Play("Roll");
                 m_dash = false;
                 m_dashTime = startDashTime;
                 m_rigidbody.velocity = new Vector3(dashSpeed * Time.fixedDeltaTime, m_rigidbody.velocity.y, 0.0f);
             }            
-            else if (m_dash && m_dashTime <= 0.0f && m_direction == 2) //Left
+            else if (m_dash && m_direction == 2) //Left
             {
+                m_animator.Play("Roll");
                 m_dash = false;
                 m_dashTime = startDashTime;
                 m_rigidbody.velocity = new Vector3(-dashSpeed * Time.fixedDeltaTime, m_rigidbody.velocity.y, 0.0f);
             }
-            else if (m_dash && m_dashTime <= 0.0f && m_direction == 3)//Up
+            else if (m_dash && m_direction == 3)//Up
             {
-                m_dash = false;
-                m_dashTime = startDashTime;
-                m_rigidbody.velocity = new Vector3(0.0f, m_rigidbody.velocity.y, -dashSpeed * Time.fixedDeltaTime);
-            }
-            else if (m_dash && m_dashTime <= 0.0f && m_direction == 4)//Down
-            {
+                m_animator.Play("Roll");
                 m_dash = false;
                 m_dashTime = startDashTime;
                 m_rigidbody.velocity = new Vector3(0.0f, m_rigidbody.velocity.y, dashSpeed * Time.fixedDeltaTime);
+            }
+            else if (m_dash && m_direction == 4)//Down
+            {
+                m_animator.Play("Roll");
+                m_dash = false;
+                m_dashTime = startDashTime;
+                m_rigidbody.velocity = new Vector3(0.0f, m_rigidbody.velocity.y, -dashSpeed * Time.fixedDeltaTime);
             }
             else
             {
@@ -186,52 +232,6 @@ public class PlayerManager : MonoBehaviour
                     m_invincibleFrame = 0.0f;
                 }         
             }
-            
-
-
-            // Animations
-            /*if (m_rigidbody.velocity.y == 0.0f && !m_damage)
-            {
-
-                if (m_rigidbody.velocity.x == 0.0f && !m_damage)
-                {
-
-                    if (m_inputManager.crouch)
-                    {
-                        m_animator.Play("Crouch");
-                    }
-                    else
-                    {
-                        m_animator.Play("Idle");
-                    }
-
-                }
-                else
-                {
-                    m_animator.Play("Skip");
-                }
-            }
-            else
-            {
-
-                if (m_rigidbody.velocity.y > 260.0f && !m_damage)
-                {
-                    m_animator.Play("MegaJump");
-                    m_megajump = true;
-
-                }
-
-                else if (m_rigidbody.velocity.y > 0.0f && !m_megajump && !m_damage)
-                {
-                    m_animator.Play("Jump");
-                }
-                
-                else if (m_rigidbody.velocity.y < 0.0f && !m_damage)
-                {
-                    m_animator.Play("Fall");
-                    m_megajump = false;
-                }
-            }*/
         }
         else
         {
@@ -240,7 +240,7 @@ public class PlayerManager : MonoBehaviour
             //Respawn
             m_timer += Time.deltaTime;
             
-            if (m_timer >= 0.9f)
+            if (m_timer >= 20.9f)
             {
                 SceneManager.LoadScene("SampleScene");
             }
@@ -256,7 +256,7 @@ public class PlayerManager : MonoBehaviour
     //Death
     public void death()
     {
-        //m_animator.Play("Death");
+        m_animator.Play("Death");
         m_death = true;        
     }
 

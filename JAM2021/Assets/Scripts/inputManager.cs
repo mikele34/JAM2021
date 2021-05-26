@@ -11,7 +11,7 @@ public class inputManager : MonoBehaviour
     [HideInInspector] public bool walkDown = false;
     [HideInInspector] public bool dash = false;
     [HideInInspector] public bool attack = false;
-    [HideInInspector] public bool crouch = false;
+    [HideInInspector] public bool run = false;
     
 
     void Update()
@@ -19,10 +19,10 @@ public class inputManager : MonoBehaviour
         //Setup
         float GP_leftStick_X = 0.0f;
         float GP_leftStick_Y = 0.0f;
-        float GP_crouch = 0.0f;
 
 
         bool GP_shoot = false;
+        bool GP_run = false;
         bool GP_dash = false;
         
 
@@ -30,9 +30,9 @@ public class inputManager : MonoBehaviour
         {
             GP_leftStick_X = Gamepad.all[0].leftStick.ReadValue().x;
             GP_leftStick_Y = Gamepad.all[0].leftStick.ReadValue().y;
-            GP_dash = Gamepad.all[0].xButton.wasPressedThisFrame;
-            GP_shoot = Gamepad.all[0].bButton.wasPressedThisFrame;
-            GP_crouch = Gamepad.all[0].leftStick.ReadValue().y;
+            GP_dash = Gamepad.all[0].bButton.wasPressedThisFrame;
+            GP_run = Gamepad.all[0].aButton.wasPressedThisFrame;
+            GP_shoot = Gamepad.all[0].xButton.wasPressedThisFrame;
         }
 
         //Right
@@ -76,7 +76,7 @@ public class inputManager : MonoBehaviour
         }
 
         //Dash
-        if (Keyboard.current.shiftKey.wasPressedThisFrame || GP_dash)
+        if (Keyboard.current.ctrlKey.wasPressedThisFrame || GP_dash)
         {
             dash = true;
         }
@@ -84,25 +84,25 @@ public class inputManager : MonoBehaviour
         {
             dash = false;
         }
-        
+
+        //Run
+        if (Keyboard.current.shiftKey.isPressed || GP_run)
+        {
+            run = true;
+        }
+        else
+        {
+            run = false;
+        }
+
         //Attack
-        if(Mouse.current.leftButton.wasPressedThisFrame || GP_shoot)
+        if (Mouse.current.leftButton.wasPressedThisFrame || GP_shoot)
         {
             attack = true;
         }
         else
         {
             attack = false;
-        }
-
-        //Crouch
-        if (Keyboard.current.sKey.isPressed || GP_crouch < -0.1)
-        {
-            crouch = true;
-        }
-        else
-        {
-            crouch = false;
         }
     }
 }
