@@ -18,7 +18,7 @@ public class EnemyManager : MonoBehaviour
 
 
     float m_walkTimer = 2.0f;
-    bool trigger = false;
+    float m_attackTimer = 5.0f;
 
     Animator m_animator;
 
@@ -40,6 +40,8 @@ public class EnemyManager : MonoBehaviour
 
                 if (m_walkTimer <= 0.0f && m_animator.GetCurrentAnimatorStateInfo(0).IsName("Idle") && m_animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1.0f)
                 {
+                    m_animator.CrossFade("Idle", 0.05f);
+                    m_animator.CrossFade("Skip", 0.05f);
                     m_state = EnemyManager.State.Skip;
                     m_walkTimer = 3.0f;
                 }
@@ -55,6 +57,8 @@ public class EnemyManager : MonoBehaviour
 
                 if (m_walkTimer <= 0.0f && m_animator.GetCurrentAnimatorStateInfo(0).IsName("Skip") && m_animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1.0f)
                 {
+                    m_animator.CrossFade("Idle", 0.05f);
+                    m_animator.CrossFade("Skip", 0.05f);
                     m_state = EnemyManager.State.Idle;
                     m_walkTimer = 3.0f;
                 }
@@ -66,17 +70,23 @@ public class EnemyManager : MonoBehaviour
 
                 m_animator.Play("Run");
 
-                if (!trigger)
-                {
-                    m_state = EnemyManager.State.Idle;
-                }
-
                 break;
 
             //Attack
             case EnemyManager.State.Attack:
 
-                m_animator.Play("Attack");
+                int m_random = Random.Range(0, 1);
+
+                m_attackTimer -= Time.deltaTime;
+
+                if (m_random == 0 && m_attackTimer <= 0.0f)
+                {
+                    m_animator.Play("Attack");
+                }
+                else if(m_attackTimer <= 0.0f)
+                {
+                    m_animator.Play("Attack2");
+                }                
 
                 break;
 
@@ -98,10 +108,17 @@ public class EnemyManager : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
-        if (other.tag == "Player")
+        if (other.gameObject.tag == "Player")
         {
-            trigger = true;
             m_state = EnemyManager.State.Run;
+        }
+    }
+
+    void OnTriggerExit(Collider other)
+    {
+        if (other.gameObject.tag == "Player")
+        {
+            m_state = EnemyManager.State.Idle;
         }
     }
 }
