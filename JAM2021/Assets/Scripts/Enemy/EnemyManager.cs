@@ -18,23 +18,26 @@ public class EnemyManager : MonoBehaviour
     EnemyManager.State m_state = EnemyManager.State.Idle;
 
     NavMeshAgent m_agent;
-    public Transform waypointGroup;
-    int m_random = 0;
-    int m_randomController = 0;
+    public Transform[] target;
 
-    float m_walkTimer = 2.0f;
+    float m_walkTimer = 3.0f;
     float m_attackTimer = 5.0f;
+
+    bool m_skip = false;
+
+    int m_child = 0;
 
     Animator m_animator;
 
     void Awake()
     {
         m_animator = GetComponent<Animator>();
-        m_agent = GetComponent<NavMeshAgent>();
+        m_agent = GetComponent<NavMeshAgent>();        
     }
 
     void Update()
     {
+
         switch (m_state)
         {
             //Idle
@@ -47,7 +50,7 @@ public class EnemyManager : MonoBehaviour
                 if (m_walkTimer <= 0.0f && m_animator.GetCurrentAnimatorStateInfo(0).IsName("Idle") && m_animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1.0f)
                 {
                     m_state = EnemyManager.State.Skip;
-                    m_walkTimer = 3.0f;
+                    m_walkTimer = 12.5f;
                 }
 
                 break;
@@ -57,21 +60,16 @@ public class EnemyManager : MonoBehaviour
 
                 m_animator.Play("Skip");
 
-                /*float distance = Vector3.Distance(transform.position, waypointGroup.GetChild(m_random).position);
-
-                if (distance <= 1f)
-                {
-                    m_random = Random.Range(0, waypointGroup.childCount - 1);
-                }
-
-                m_agent.SetDestination(waypointGroup.GetChild(m_random).position);*/
+                skip();
 
                 m_walkTimer -= Time.deltaTime;
 
                 if (m_walkTimer <= 0.0f && m_animator.GetCurrentAnimatorStateInfo(0).IsName("Skip") && m_animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1.0f)
-                {;
+                {
+                    m_child = 0;
                     m_state = EnemyManager.State.Idle;
-                    m_walkTimer = 3.0f;
+                    m_walkTimer = 3.5f;
+                    m_skip = false;
                 }
 
                 break;
@@ -86,11 +84,11 @@ public class EnemyManager : MonoBehaviour
             //Attack
             case EnemyManager.State.Attack:
 
-                int m_random = Random.Range(0, 1);
+                int m_randomAttack = Random.Range(0, 1);
 
                 m_attackTimer -= Time.deltaTime;
 
-                if (m_random == 0 && m_attackTimer <= 0.0f)
+                if (m_randomAttack == 0 && m_attackTimer <= 0.0f)
                 {
                     m_animator.Play("Attack");
                 }
@@ -115,6 +113,23 @@ public class EnemyManager : MonoBehaviour
 
                 break;
         }
+
+
+        if (m_skip)
+        {
+            m_agent.SetDestination(target[m_child].position);
+
+            if (m_agent.remainingDistance <= m_agent.stoppingDistance && m_child < target.Length - 1)
+            {
+                m_child++;
+                m_agent.SetDestination(target[m_child].position);
+            }
+        }
+    }
+
+    void skip()
+    {
+        m_skip = true;
     }
 
     void OnTriggerEnter(Collider other)
