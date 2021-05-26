@@ -7,11 +7,10 @@ public class inputManager : MonoBehaviour
 {
     [HideInInspector] public bool walkRight = false;
     [HideInInspector] public bool walkLeft = false;
-    [HideInInspector] public bool jump = false;
+    [HideInInspector] public bool walkUp = false;
+    [HideInInspector] public bool walkDown = false;
     [HideInInspector] public bool dash = false;
     [HideInInspector] public bool shoot = false;
-    [HideInInspector] public bool Cshoot = false;
-    [HideInInspector] public bool Sshoot = false;
     [HideInInspector] public bool crouch = false;
     
 
@@ -19,23 +18,20 @@ public class inputManager : MonoBehaviour
     {
         //Setup
         float GP_leftStick_X = 0.0f;
+        float GP_leftStick_Y = 0.0f;
         float GP_crouch = 0.0f;
 
-        bool GP_jump = false;
+
         bool GP_shoot = false;
-        bool GP_Sshoot = false;
-        bool GP_Cshoot = false;
         bool GP_dash = false;
         
 
         if(Gamepad.all.Count > 0)
         {
             GP_leftStick_X = Gamepad.all[0].leftStick.ReadValue().x;
-            GP_jump = Gamepad.all[0].aButton.wasPressedThisFrame;
+            GP_leftStick_Y = Gamepad.all[0].leftStick.ReadValue().y;
             GP_dash = Gamepad.all[0].xButton.wasPressedThisFrame;
             GP_shoot = Gamepad.all[0].bButton.wasPressedThisFrame;
-            GP_Sshoot = Gamepad.all[0].bButton.wasReleasedThisFrame;
-            GP_Cshoot = Gamepad.all[0].bButton.isPressed;
             GP_crouch = Gamepad.all[0].leftStick.ReadValue().y;
         }
 
@@ -48,6 +44,7 @@ public class inputManager : MonoBehaviour
         {
             walkRight = false;
         }
+
         //Left
         if (Keyboard.current.aKey.isPressed || GP_leftStick_X < -0.1f)
         {
@@ -58,14 +55,24 @@ public class inputManager : MonoBehaviour
             walkLeft = false;
         }
 
-        //Jump
-        if (Keyboard.current.spaceKey.wasPressedThisFrame || GP_jump)
+        //Up
+        if (Keyboard.current.wKey.isPressed || GP_leftStick_Y > 0.1f)
         {
-            jump = true;
+            walkUp = true;
         }
         else
         {
-            jump = false;
+            walkUp = false;
+        }
+
+        //Down
+        if (Keyboard.current.sKey.isPressed || GP_leftStick_Y < -0.1f)
+        {
+            walkDown = true;
+        }
+        else
+        {
+            walkDown = false;
         }
 
         //Dash
@@ -88,34 +95,14 @@ public class inputManager : MonoBehaviour
             shoot = false;
         }
 
-        //Sshoot
-        if(Mouse.current.leftButton.wasReleasedThisFrame || GP_Sshoot)
+        //Crouch
+        if (Keyboard.current.sKey.isPressed || GP_crouch < -0.1)
         {
-            Sshoot = true;
+            crouch = true;
         }
         else
         {
-            Sshoot = false;
+            crouch = false;
         }
-
-        //CShoot
-        if (Mouse.current.leftButton.isPressed || GP_Cshoot)
-        {
-            Cshoot = true;
-        }
-        else
-        {
-            Cshoot = false;
-        }
-
-            //Crouch
-            if (Keyboard.current.sKey.isPressed || GP_crouch < -0.1)
-            {
-                 crouch = true;
-            }
-            else
-            {
-                 crouch = false;
-            }
     }
 }
