@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class EnemyManager : MonoBehaviour
 {
@@ -16,6 +17,10 @@ public class EnemyManager : MonoBehaviour
 
     EnemyManager.State m_state = EnemyManager.State.Idle;
 
+    NavMeshAgent m_agent;
+    public Transform waypointGroup;
+    int m_random = 0;
+    int m_randomController = 0;
 
     float m_walkTimer = 2.0f;
     float m_attackTimer = 5.0f;
@@ -25,6 +30,7 @@ public class EnemyManager : MonoBehaviour
     void Awake()
     {
         m_animator = GetComponent<Animator>();
+        m_agent = GetComponent<NavMeshAgent>();
     }
 
     void Update()
@@ -40,8 +46,6 @@ public class EnemyManager : MonoBehaviour
 
                 if (m_walkTimer <= 0.0f && m_animator.GetCurrentAnimatorStateInfo(0).IsName("Idle") && m_animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1.0f)
                 {
-                    m_animator.CrossFade("Idle", 0.05f);
-                    m_animator.CrossFade("Skip", 0.05f);
                     m_state = EnemyManager.State.Skip;
                     m_walkTimer = 3.0f;
                 }
@@ -53,12 +57,19 @@ public class EnemyManager : MonoBehaviour
 
                 m_animator.Play("Skip");
 
+                /*float distance = Vector3.Distance(transform.position, waypointGroup.GetChild(m_random).position);
+
+                if (distance <= 1f)
+                {
+                    m_random = Random.Range(0, waypointGroup.childCount - 1);
+                }
+
+                m_agent.SetDestination(waypointGroup.GetChild(m_random).position);*/
+
                 m_walkTimer -= Time.deltaTime;
 
                 if (m_walkTimer <= 0.0f && m_animator.GetCurrentAnimatorStateInfo(0).IsName("Skip") && m_animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1.0f)
-                {
-                    m_animator.CrossFade("Idle", 0.05f);
-                    m_animator.CrossFade("Skip", 0.05f);
+                {;
                     m_state = EnemyManager.State.Idle;
                     m_walkTimer = 3.0f;
                 }
