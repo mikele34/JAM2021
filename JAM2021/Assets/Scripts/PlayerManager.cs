@@ -1,11 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using UnityEngine.InputSystem;
 
 public class PlayerManager : MonoBehaviour
 {
+    public BarHealthManager healtBar;
 
     [Header("Movement")]
     public float walkspeed = 300.0f;
@@ -43,6 +45,7 @@ public class PlayerManager : MonoBehaviour
     inputManager m_inputManager;
     HealthManager  m_healthManager;
     
+
     void Awake()
     {
         m_inputManager = GameObject.Find("inputManager").GetComponent<inputManager>();
@@ -50,31 +53,15 @@ public class PlayerManager : MonoBehaviour
         m_rigidbody = GetComponent<Rigidbody>();
         m_animator = GetComponent<Animator>();
         m_healthManager = GetComponent<HealthManager>();
+        healtBar.SetMaxHealth(m_healthManager.numOfHearts);
     }
 
 
     void Update()
     {
-        // Raycast Jump
-        /*RaycastHit2D hit = Physics2D.Raycast(transform.position, Vector2.down, 1.0f, layerMask);
-
-        if (hit)
-        {
-            m_isGrounded = true;
-        }
-        else
-        {
-            m_isGrounded = false;
-        }*/
-
-        //Death
-        if (m_hitPoint >= m_healthManager.numOfHearts)
-            death();
-
         //Attack
         if (m_inputManager.attack)
         {
-            m_hitPoint++;
             //m_animator.Play("Attack");
             Debug.Log("Attack");
         }
@@ -268,6 +255,7 @@ public class PlayerManager : MonoBehaviour
     //Damage
     public void damage()
     {
+        healtBar.SetHealth(m_healthManager.Health);
         m_healthManager.Health--;
         //m_animator.Play("Damage");
         m_damage = true;

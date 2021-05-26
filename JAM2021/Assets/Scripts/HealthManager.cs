@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class HealthManager : MonoBehaviour
 {
@@ -9,14 +8,17 @@ public class HealthManager : MonoBehaviour
     public int numOfHearts;
 
 
+    void Awake()
+    {
+        Health = numOfHearts;
+    }
+
+
     void Update()
     {
-
         if(Health > numOfHearts)
         {
             Health = numOfHearts;
         }
-
-
     }
 }
