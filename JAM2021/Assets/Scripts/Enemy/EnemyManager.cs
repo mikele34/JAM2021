@@ -11,15 +11,20 @@ public class EnemyManager : MonoBehaviour
         Skip,
         Run,
         Attack,
-        Damage,
+        Hit,
         Death
     }
 
     EnemyManager.State m_state = EnemyManager.State.Idle;
-
     NavMeshAgent m_agent;
+    Animator m_animator;
+    BoxCollider m_boxCollider;
+    CapsuleCollider m_capsuleCollider;
+
     public Transform[] target;
     public Transform playerTarget;
+
+    public int healt = 3;
 
     float m_walkTimer = 3.0f;
     float m_attackTimer = 5.0f;
@@ -29,12 +34,13 @@ public class EnemyManager : MonoBehaviour
 
     int m_child = 0;
 
-    Animator m_animator;
 
     void Awake()
     {
         m_animator = GetComponent<Animator>();
-        m_agent = GetComponent<NavMeshAgent>();        
+        m_agent = GetComponent<NavMeshAgent>();
+        m_boxCollider = GetComponent<BoxCollider>();
+        m_capsuleCollider = GetComponent<CapsuleCollider>();        
     }
 
     void Update()
@@ -61,6 +67,7 @@ public class EnemyManager : MonoBehaviour
             case EnemyManager.State.Skip:
 
                 m_animator.Play("Skip");
+                m_agent.acceleration = 8;
 
                 skip();
 
@@ -68,7 +75,6 @@ public class EnemyManager : MonoBehaviour
 
                 if (m_walkTimer <= 0.0f && m_animator.GetCurrentAnimatorStateInfo(0).IsName("Skip") && m_animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1.0f)
                 {
-                    Debug.Log("1");
                     m_child = 0;
                     m_state = EnemyManager.State.Idle;
                     m_walkTimer = 3.5f;
@@ -81,6 +87,8 @@ public class EnemyManager : MonoBehaviour
             case EnemyManager.State.Run:
 
                 m_animator.Play("Run");
+
+                m_agent.acceleration = 10;
 
                 break;
 
@@ -103,9 +111,17 @@ public class EnemyManager : MonoBehaviour
                 break;
 
             //Damage
-            case EnemyManager.State.Damage:
+            case EnemyManager.State.Hit:
 
-                m_animator.Play("Damage");
+                m_animator.Play("Hit");
+
+                m_agent.SetDestination(transform.position);
+
+                if (m_animator.GetCurrentAnimatorStateInfo(0).IsName("Hit") && m_animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1.0f)
+                {
+                    m_state = EnemyManager.State.Run;
+                    m_trigger = true;
+                }                
 
                 break;
 
@@ -113,6 +129,10 @@ public class EnemyManager : MonoBehaviour
             case EnemyManager.State.Death:
 
                 m_animator.Play("Death");
+                m_agent.SetDestination(transform.position);
+                m_trigger = false;
+                m_boxCollider.enabled = false;
+                m_capsuleCollider.enabled = false;
 
                 break;
         }
@@ -124,7 +144,6 @@ public class EnemyManager : MonoBehaviour
 
             if (m_agent.remainingDistance <= m_agent.stoppingDistance && m_child < target.Length - 1)
             {
-                Debug.Log("2");
                 m_child++;
                 m_agent.SetDestination(target[m_child].position);
             }
@@ -146,12 +165,17 @@ public class EnemyManager : MonoBehaviour
             {
                 m_skip = true;
             }
-            else
+            else 
             {
                 m_agent.SetDestination(transform.position);
                 m_state = EnemyManager.State.Idle;
             }
             
+        }
+
+        if (healt <= 0)
+        {
+            m_state = EnemyManager.State.Death;
         }
     }
 
@@ -174,6 +198,15 @@ public class EnemyManager : MonoBehaviour
         if (other.gameObject.tag == "Player")
         {
             m_trigger = false;            
+        }
+    }
+
+    void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.tag == "Player")
+        {
+            healt--;
+            m_state = EnemyManager.State.Hit;
         }
     }
 }
