@@ -4,11 +4,11 @@ using UnityEngine;
 
 public class PortalManager : MonoBehaviour
 {
-    public int portal = 1; // 1->forest   2->beach   3->city    4->GoIN    5->GoOUT    6->OUTDestroyed
+    public int portal = 1; // 1->forest   2->beach   3->city    4->GoIN    5->GoOUT
 
     public SceneFader sceneFader;
 
-    string levelToLoad = "Forest";
+    string levelToLoad;
 
 
     void OnCollisionEnter(Collision collision)
@@ -35,13 +35,18 @@ public class PortalManager : MonoBehaviour
         }
         else if (collision.gameObject.tag == "Player" && portal == 5)
         {
-            levelToLoad = "BaseLevel";
-            sceneFader.FadeTo(levelToLoad);
-        }
-        else if (collision.gameObject.tag == "Player" && portal == 6)
-        {
-            levelToLoad = "DestoyedBaseLevel";
-            sceneFader.FadeTo(levelToLoad);
+            Debug.Log(PlayerManager.m_first);
+
+            if (!PlayerManager.m_first)
+            {
+                levelToLoad = "BaseLevel";
+                sceneFader.FadeTo(levelToLoad);
+            }
+            else
+            {
+                levelToLoad = "DestoyedBaseLevel";
+                sceneFader.FadeTo(levelToLoad);
+            }            
         }
     }
 }

@@ -17,6 +17,9 @@ public class PlayerManager : MonoBehaviour
     public BarHealthManager healtBar;
     public EnemyManager m_enemyManager;
 
+
+    static public bool m_first = true;
+
     [Header("Movement")]
     public float walkspeed = 300.0f;
     public float runspeed = 300.0f;
@@ -54,6 +57,11 @@ public class PlayerManager : MonoBehaviour
         m_animator = GetComponent<Animator>();
         m_healthManager = GetComponent<HealthManager>();
         healtBar.SetMaxHealth(m_healthManager.numOfHearts);
+    }
+
+    void Start()
+    {
+        m_first = false;
     }
 
 
