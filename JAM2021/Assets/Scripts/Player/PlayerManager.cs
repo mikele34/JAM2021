@@ -3,6 +3,19 @@ using UnityEngine.SceneManagement;
 
 public class PlayerManager : MonoBehaviour
 {
+    enum State
+    {
+        Idle,
+        Skip,
+        Run,
+        Attack,
+        Hit,
+        Death
+    }
+
+    PlayerManager.State m_state = PlayerManager.State.Idle;
+
+
     public BarHealthManager healtBar;
 
     [Header("Movement")]
@@ -20,16 +33,9 @@ public class PlayerManager : MonoBehaviour
     public float shotRatio = 0.2f;
 
     float speed = 300.0f;
-    float m_timer = 0.0f;
-    float m_invincibleFrame = 0.0f;
+
 
     int m_hitPoint = 0; 
-
-    bool m_death = false;
-    bool m_damage = false;    
-    bool m_thrust = false;
-    bool m_bump = false;
-
 
 
     Rigidbody m_rigidbody;
@@ -51,41 +57,52 @@ public class PlayerManager : MonoBehaviour
 
     void Update()
     {
+        //Moviment
+        if (m_inputManager.walkLeft && m_inputManager.walkRight || m_inputManager.walkUp && m_inputManager.walkDown)
+        {
+            m_state = PlayerManager.State.Idle;
+        }
+        else if (m_inputManager.walkLeft || m_inputManager.walkRight || m_inputManager.walkUp || m_inputManager.walkDown)
+        {
+            if (m_inputManager.run)
+            {
+                m_state = PlayerManager.State.Run;
+            }
+            else
+            {
+                m_state = PlayerManager.State.Skip;
+            }
+        }
+        else
+        {
+            m_state = PlayerManager.State.Idle;
+        }
+
         //Attack
         if (m_inputManager.attack)
         {
-            //m_animator.Play("Attack");
-            Debug.Log("Attack");
+            m_state = PlayerManager.State.Attack;
         }
-    }
 
-
-
-    void FixedUpdate()
-    {
-        if (!m_death)
+        switch (m_state)
         {
+            //Idle
+            case PlayerManager.State.Idle:
 
-            if (m_inputManager.walkLeft && m_inputManager.walkRight || m_inputManager.walkUp && m_inputManager.walkDown)
-            {
                 m_animator.Play("Idle");
                 m_rigidbody.velocity = new Vector3(0.0f, 0.0f, 0.0f);
-            }
-            else if (m_inputManager.walkLeft || m_inputManager.walkRight || m_inputManager.walkUp || m_inputManager.walkDown)
-            {
+
+                break;
+
+            //Skip
+            case PlayerManager.State.Skip:
+
+                m_animator.Play("Skip");
+                speed = walkspeed;
+
                 //Right
                 if (m_inputManager.walkRight)
                 {
-                    if (m_inputManager.run)
-                    {
-                        m_animator.Play("Run");
-                        speed = runspeed;
-                    }
-                    else
-                    {
-                        m_animator.Play("Skip");
-                        speed = walkspeed;
-                    }
                     transform.eulerAngles = new Vector3(0.0f, 90.0f, 0.0f);
                     m_rigidbody.velocity = new Vector3(speed * Time.fixedDeltaTime, m_rigidbody.velocity.y, 0.0f);
                 }
@@ -93,33 +110,13 @@ public class PlayerManager : MonoBehaviour
                 //Left
                 if (m_inputManager.walkLeft)
                 {
-                    if (m_inputManager.run)
-                    {
-                        m_animator.Play("Run");
-                        speed = runspeed;
-                    }
-                    else
-                    {
-                        m_animator.Play("Skip");
-                        speed = walkspeed;
-                    }
                     transform.eulerAngles = new Vector3(0.0f, 270.0f, 0.0f);
                     m_rigidbody.velocity = new Vector3(-speed * Time.fixedDeltaTime, m_rigidbody.velocity.y, 0.0f);
-                }                
+                }
 
                 //Up
                 if (m_inputManager.walkUp)
                 {
-                    if (m_inputManager.run)
-                    {
-                        m_animator.Play("Run");
-                        speed = runspeed;
-                    }
-                    else
-                    {
-                        m_animator.Play("Skip");
-                        speed = walkspeed;
-                    }
                     transform.eulerAngles = new Vector3(0.0f, 0.0f, 0.0f);
                     m_rigidbody.velocity = new Vector3(0.0f, m_rigidbody.velocity.y, speed * Time.fixedDeltaTime);
                 }
@@ -127,114 +124,97 @@ public class PlayerManager : MonoBehaviour
                 //Down
                 if (m_inputManager.walkDown)
                 {
-                    if (m_inputManager.run)
-                    {
-                        m_animator.Play("Run");
-                        speed = runspeed;
-                    }
-                    else
-                    {
-                        m_animator.Play("Skip");
-                        speed = walkspeed;
-                    }
                     transform.eulerAngles = new Vector3(0.0f, 180.0f, 0.0f);
                     m_rigidbody.velocity = new Vector3(0.0f, m_rigidbody.velocity.y, -speed * Time.fixedDeltaTime);
                 }
-            }
-            else
-            {
-                m_animator.Play("Idle");
-                m_rigidbody.velocity = new Vector3(0.0f, m_rigidbody.velocity.y, 0.0f);    
-            }
+                break;
 
-            //Thrust
-            if (m_thrust)
-            {
-                m_rigidbody.velocity = new Vector2(m_rigidbody.velocity.x, thrust);
-                m_thrust = false;
-            }
+            //Run
+            case PlayerManager.State.Run:
 
-            //Bump
-            if (m_bump)
-            {
-                m_rigidbody.velocity = new Vector2(-bumpX, bumpY);
-                m_bump = false;
-            }
+                m_animator.Play("Run");
+                speed = runspeed;
 
-            //Damage
-            if (m_damage)
-            {               
-                m_invincibleFrame += Time.deltaTime;
-
-                if (m_invincibleFrame >= 1.0f)
+                //Right
+                if (m_inputManager.walkRight)
                 {
-                    m_damage = false;
-                    m_invincibleFrame = 0.0f;
-                }         
-            }
+                    transform.eulerAngles = new Vector3(0.0f, 90.0f, 0.0f);
+                    m_rigidbody.velocity = new Vector3(speed * Time.fixedDeltaTime, m_rigidbody.velocity.y, 0.0f);
+                }
+
+                //Left
+                if (m_inputManager.walkLeft)
+                {
+                    transform.eulerAngles = new Vector3(0.0f, 270.0f, 0.0f);
+                    m_rigidbody.velocity = new Vector3(-speed * Time.fixedDeltaTime, m_rigidbody.velocity.y, 0.0f);
+                }
+
+                //Up
+                if (m_inputManager.walkUp)
+                {
+                    transform.eulerAngles = new Vector3(0.0f, 0.0f, 0.0f);
+                    m_rigidbody.velocity = new Vector3(0.0f, m_rigidbody.velocity.y, speed * Time.fixedDeltaTime);
+                }
+
+                //Down
+                if (m_inputManager.walkDown)
+                {
+                    transform.eulerAngles = new Vector3(0.0f, 180.0f, 0.0f);
+                    m_rigidbody.velocity = new Vector3(0.0f, m_rigidbody.velocity.y, -speed * Time.fixedDeltaTime);
+                }
+
+                break;
+
+            //Attack
+            case PlayerManager.State.Attack:
+
+                m_animator.Play("Attack");
+
+                if(m_animator.GetCurrentAnimatorStateInfo(0).IsName("Attack") && m_animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1.0f)
+                {
+                    m_state = PlayerManager.State.Idle;
+                }
+
+                break;
+
+            //Hit
+            case PlayerManager.State.Hit:
+
+                m_animator.Play("Hit");
+
+                healtBar.SetHealth(m_healthManager.Health);
+                m_healthManager.Health--;
+
+                break;
+
+            //Death
+            case PlayerManager.State.Death:
+
+                m_animator.Play("Death");
+
+                if (m_animator.GetCurrentAnimatorStateInfo(0).IsName("Death") && m_animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1.0f)
+                {
+                    SceneManager.LoadScene("SampleScene");
+                }
+
+                break;
         }
-        else
-        {
-            m_rigidbody.velocity = new Vector3(0.0f, m_rigidbody.velocity.y, 0.0f);
-
-            //Respawn
-            m_timer += Time.deltaTime;
-            
-            if (m_timer >= 20.9f)
-            {
-                SceneManager.LoadScene("SampleScene");
-            }
-        }
+        
     }
-
-    void OnDrawGizmos()
-    {
-        Gizmos.color = Color.red;
-        Gizmos.DrawRay(transform.position, Vector2.down * 1.0f);
-    }
-
-    //Death
-    public void death()
-    {
-        m_animator.Play("Death");
-        m_death = true;        
-    }
-
-    //Damage
-    public void damage()
-    {
-        healtBar.SetHealth(m_healthManager.Health);
-        m_healthManager.Health--;
-        //m_animator.Play("Damage");
-        m_damage = true;
-    }
-
-    //Megajump
-    public void Thrust()
-    {
-        m_thrust = true;
-    }
-
-    //Bump
-    public void Bump()
-    {
-        m_bump = true;
-    }
-
     void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.gameObject.tag == "Enemy")
         {
-            m_hitPoint++;
+            m_hitPoint+=10;
 
-            if( m_hitPoint < m_healthManager.numOfHearts)
+            if (m_hitPoint < m_healthManager.numOfHearts)
             {
-                damage();                              
+                m_state = PlayerManager.State.Hit;
             }
 
             if (m_hitPoint >= m_healthManager.numOfHearts)
             {
-                death();
+                m_state = PlayerManager.State.Death;
             }
         }
     }

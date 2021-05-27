@@ -28,7 +28,6 @@ public class EnemyManager : MonoBehaviour
     public int healt = 3;
 
     float m_walkTimer = 3.0f;
-    float m_attackTimer = 5.0f;
 
     bool m_skip = false;
     bool m_trigger = false;
@@ -96,7 +95,7 @@ public class EnemyManager : MonoBehaviour
             //Attack
             case EnemyManager.State.Attack:
 
-                 m_animator.Play("Attack");
+                m_animator.Play("Attack");
 
                 if (m_animator.GetCurrentAnimatorStateInfo(0).IsName("Attack") && m_animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1.0f)
                 {
@@ -105,8 +104,9 @@ public class EnemyManager : MonoBehaviour
 
                 break;
 
-            //Damage
+            //Hit
             case EnemyManager.State.Hit:
+                healt--;
 
                 m_animator.Play("Hit");
 
@@ -191,6 +191,7 @@ public class EnemyManager : MonoBehaviour
             m_trigger = true;
             m_state = EnemyManager.State.Run;
         }
+
     }
 
     void OnTriggerExit(Collider other)
@@ -205,7 +206,11 @@ public class EnemyManager : MonoBehaviour
     {
         if (collision.gameObject.tag == "Player")
         {
-            healt--;
+            m_state = EnemyManager.State.Attack;
+        }
+
+        if (collision.gameObject.tag == "Weapon")
+        {
             m_state = EnemyManager.State.Hit;
         }
     }
