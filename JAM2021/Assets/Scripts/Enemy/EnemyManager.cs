@@ -19,11 +19,13 @@ public class EnemyManager : MonoBehaviour
 
     NavMeshAgent m_agent;
     public Transform[] target;
+    public Transform playerTarget;
 
     float m_walkTimer = 3.0f;
     float m_attackTimer = 5.0f;
 
     bool m_skip = false;
+    bool m_trigger = false;
 
     int m_child = 0;
 
@@ -66,6 +68,7 @@ public class EnemyManager : MonoBehaviour
 
                 if (m_walkTimer <= 0.0f && m_animator.GetCurrentAnimatorStateInfo(0).IsName("Skip") && m_animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1.0f)
                 {
+                    Debug.Log("1");
                     m_child = 0;
                     m_state = EnemyManager.State.Idle;
                     m_walkTimer = 3.5f;
@@ -121,9 +124,34 @@ public class EnemyManager : MonoBehaviour
 
             if (m_agent.remainingDistance <= m_agent.stoppingDistance && m_child < target.Length - 1)
             {
+                Debug.Log("2");
                 m_child++;
                 m_agent.SetDestination(target[m_child].position);
             }
+            else if (m_child == target.Length)
+            {
+                m_child = 0;
+            }
+        }
+
+        if (m_trigger)
+        {
+            m_skip = false;
+            m_child = 0;
+            m_agent.SetDestination(playerTarget.position);
+        }
+        else
+        {
+            if (m_state == EnemyManager.State.Skip)
+            {
+                m_skip = true;
+            }
+            else
+            {
+                m_agent.SetDestination(transform.position);
+                m_state = EnemyManager.State.Idle;
+            }
+            
         }
     }
 
@@ -136,6 +164,7 @@ public class EnemyManager : MonoBehaviour
     {
         if (other.gameObject.tag == "Player")
         {
+            m_trigger = true;
             m_state = EnemyManager.State.Run;
         }
     }
@@ -144,7 +173,7 @@ public class EnemyManager : MonoBehaviour
     {
         if (other.gameObject.tag == "Player")
         {
-            m_state = EnemyManager.State.Idle;
+            m_trigger = false;            
         }
     }
 }
