@@ -7,7 +7,6 @@ public class inputManager : MonoBehaviour
     [HideInInspector] public bool walkLeft = false;
     [HideInInspector] public bool walkUp = false;
     [HideInInspector] public bool walkDown = false;
-    [HideInInspector] public bool dash = false;
     [HideInInspector] public bool attack = false;
     [HideInInspector] public bool run = false;
     
@@ -15,26 +14,29 @@ public class inputManager : MonoBehaviour
     void Update()
     {
         //Setup
-        float GP_leftStick_X = 0.0f;
-        float GP_leftStick_Y = 0.0f;
+        bool GP_leftdpad = false;
+        bool GP_rightdpad = false;
+        bool GP_updpad = false;
+        bool GP_downdpad = false;
 
 
         bool GP_shoot = false;
         bool GP_run = false;
-        bool GP_dash = false;
         
 
         if(Gamepad.all.Count > 0)
         {
-            GP_leftStick_X = Gamepad.all[0].leftStick.ReadValue().x;
-            GP_leftStick_Y = Gamepad.all[0].leftStick.ReadValue().y;
-            GP_dash = Gamepad.all[0].bButton.wasPressedThisFrame;
-            GP_run = Gamepad.all[0].aButton.wasPressedThisFrame;
+            GP_leftdpad = Gamepad.all[0].dpad.left.isPressed;
+            GP_rightdpad = Gamepad.all[0].dpad.right.isPressed;
+            GP_updpad = Gamepad.all[0].dpad.up.isPressed;
+            GP_downdpad = Gamepad.all[0].dpad.down.isPressed;
+            
+            GP_run = Gamepad.all[0].aButton.isPressed;
             GP_shoot = Gamepad.all[0].xButton.wasPressedThisFrame;
         }
 
         //Right
-        if(Keyboard.current.dKey.isPressed || GP_leftStick_X > 0.1f)
+        if(Keyboard.current.dKey.isPressed || GP_rightdpad)
         {
             walkRight = true;
         }
@@ -44,7 +46,7 @@ public class inputManager : MonoBehaviour
         }
 
         //Left
-        if (Keyboard.current.aKey.isPressed || GP_leftStick_X < -0.1f)
+        if (Keyboard.current.aKey.isPressed || GP_leftdpad)
         {
             walkLeft = true;
         }
@@ -54,7 +56,7 @@ public class inputManager : MonoBehaviour
         }
 
         //Up
-        if (Keyboard.current.wKey.isPressed || GP_leftStick_Y > 0.1f)
+        if (Keyboard.current.wKey.isPressed || GP_updpad)
         {
             walkUp = true;
         }
@@ -64,7 +66,7 @@ public class inputManager : MonoBehaviour
         }
 
         //Down
-        if (Keyboard.current.sKey.isPressed || GP_leftStick_Y < -0.1f)
+        if (Keyboard.current.sKey.isPressed || GP_downdpad)
         {
             walkDown = true;
         }

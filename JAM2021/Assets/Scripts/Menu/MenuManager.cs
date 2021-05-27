@@ -20,6 +20,12 @@ public class MenuManager : MonoBehaviour
         sceneFader.FadeTo(levelToLoad);
     }
 
+    public void Tutorial()
+    {
+        levelToLoad = "Tutorial";
+        sceneFader.FadeTo(levelToLoad);
+    }
+
     public void Back()
     {
         levelToLoad = "Menu";

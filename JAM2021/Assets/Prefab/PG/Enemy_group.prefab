@@ -46,7 +46,7 @@ MonoBehaviour:
   playerTarget: {fileID: 0}
   enemyAttackManager: {fileID: 1037837657983923324}
   healt: 6
-  damage: 10
+  damage: 5
 --- !u!195 &1037837657283485870
 NavMeshAgent:
   m_ObjectHideFlags: 0

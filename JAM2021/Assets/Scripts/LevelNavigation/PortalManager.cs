@@ -35,8 +35,6 @@ public class PortalManager : MonoBehaviour
         }
         else if (collision.gameObject.tag == "Player" && portal == 5)
         {
-            Debug.Log(PlayerManager.m_first);
-
             if (!PlayerManager.m_first)
             {
                 levelToLoad = "BaseLevel";
@@ -46,6 +44,7 @@ public class PortalManager : MonoBehaviour
             {
                 levelToLoad = "DestoyedBaseLevel";
                 sceneFader.FadeTo(levelToLoad);
+                PlayerManager.m_first = false;
             }            
         }
     }

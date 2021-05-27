@@ -59,11 +59,6 @@ public class PlayerManager : MonoBehaviour
         healtBar.SetMaxHealth(m_healthManager.numOfHearts);
     }
 
-    void Start()
-    {
-        m_first = false;
-    }
-
 
     void Update()
     {
