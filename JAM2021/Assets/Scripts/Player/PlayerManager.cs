@@ -15,6 +15,7 @@ public class PlayerManager : MonoBehaviour
 
 
     public BarHealthManager healtBar;
+    public EnemyManager m_enemyManager;
 
     [Header("Movement")]
     public float walkspeed = 300.0f;
@@ -32,19 +33,22 @@ public class PlayerManager : MonoBehaviour
 
     float speed = 300.0f;
 
-
     int m_hitPoint = 0; 
-
 
     Rigidbody m_rigidbody;
     Animator m_animator;
     inputManager m_inputManager;
     HealthManager  m_healthManager;
+    BoxCollider m_macheteBox;
+
     
 
     void Awake()
     {
         m_inputManager = GameObject.Find("inputManager").GetComponent<inputManager>();
+        m_macheteBox = GameObject.Find("Machete").GetComponent<BoxCollider>();
+
+        m_macheteBox.enabled = false;
 
         m_rigidbody = GetComponent<Rigidbody>();
         m_animator = GetComponent<Animator>();
@@ -144,6 +148,7 @@ public class PlayerManager : MonoBehaviour
                 //Attack
                 if (m_inputManager.attack)
                 {
+                    m_macheteBox.enabled = true;
                     m_animator.Play("Attack");
                     m_state = PlayerManager.State.Attack;
                 }
@@ -158,6 +163,7 @@ public class PlayerManager : MonoBehaviour
 
                 if (m_animator.GetCurrentAnimatorStateInfo(0).IsName("Attack") && m_animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1.0f)
                 {
+                    m_macheteBox.enabled = false;
                     m_state = PlayerManager.State.Move;
                 }
 
@@ -189,14 +195,14 @@ public class PlayerManager : MonoBehaviour
     {
         if (collision.gameObject.tag == "Enemy")
         {
-            m_hitPoint+=10;
+            m_hitPoint += m_enemyManager.damage;
 
             if (m_hitPoint < m_healthManager.numOfHearts)
             {
                 m_animator.Play("Hit");
 
                 healtBar.SetHealth(m_healthManager.Health);
-                m_healthManager.Health -= 10;
+                m_healthManager.Health -= m_enemyManager.damage;
 
                 m_state = PlayerManager.State.Hit;
             }

@@ -26,6 +26,7 @@ public class EnemyManager : MonoBehaviour
     public EnemyAttackManager enemyAttackManager;
 
     public int healt = 3;
+    public int damage = 10;
 
     float m_walkTimer = 3.0f;
 
