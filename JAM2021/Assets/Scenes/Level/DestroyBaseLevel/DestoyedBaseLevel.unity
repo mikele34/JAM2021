@@ -411,7 +411,6 @@ MonoBehaviour:
   walkLeft: 0
   walkUp: 0
   walkDown: 0
-  dash: 0
   attack: 0
   run: 0
 --- !u!4 &858673339
