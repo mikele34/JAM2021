@@ -68,7 +68,7 @@ public class EnemyManager : MonoBehaviour
             case EnemyManager.State.Skip:
 
                 m_animator.Play("Skip");
-                m_agent.acceleration = 8;
+                m_agent.acceleration = 2;
 
                 skip();
 
@@ -89,7 +89,7 @@ public class EnemyManager : MonoBehaviour
 
                 m_animator.Play("Run");
 
-                m_agent.acceleration = 10;
+                m_agent.acceleration = 20;
 
                 break;
 
