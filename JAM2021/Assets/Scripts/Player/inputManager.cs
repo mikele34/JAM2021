@@ -73,16 +73,6 @@ public class inputManager : MonoBehaviour
             walkDown = false;
         }
 
-        //Dash
-        if (Keyboard.current.ctrlKey.wasPressedThisFrame || GP_dash)
-        {
-            dash = true;
-        }
-        else
-        {
-            dash = false;
-        }
-
         //Run
         if (Keyboard.current.shiftKey.isPressed || GP_run)
         {

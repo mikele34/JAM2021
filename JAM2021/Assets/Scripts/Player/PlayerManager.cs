@@ -20,18 +20,14 @@ public class PlayerManager : MonoBehaviour
     public float shotRatio = 0.2f;
 
     float speed = 300.0f;
-    float startDashTime = 0.0f;
-    float m_dashTime;
     float m_timer = 0.0f;
     float m_invincibleFrame = 0.0f;
 
     int m_hitPoint = 0; 
-    int m_direction = 1; //1 -> Right      2 -> Left      3 -> Up      4 -> Down
 
     bool m_death = false;
     bool m_damage = false;    
     bool m_thrust = false;
-    bool m_dash = false;
     bool m_bump = false;
 
 
@@ -61,12 +57,6 @@ public class PlayerManager : MonoBehaviour
             //m_animator.Play("Attack");
             Debug.Log("Attack");
         }
-
-        //Dash
-        if (m_inputManager.dash)
-        {
-            m_dash = true; 
-        } 
     }
 
 
@@ -96,7 +86,6 @@ public class PlayerManager : MonoBehaviour
                         m_animator.Play("Skip");
                         speed = walkspeed;
                     }
-                    m_direction = 1;
                     transform.eulerAngles = new Vector3(0.0f, 90.0f, 0.0f);
                     m_rigidbody.velocity = new Vector3(speed * Time.fixedDeltaTime, m_rigidbody.velocity.y, 0.0f);
                 }
@@ -114,7 +103,6 @@ public class PlayerManager : MonoBehaviour
                         m_animator.Play("Skip");
                         speed = walkspeed;
                     }
-                    m_direction = 2;
                     transform.eulerAngles = new Vector3(0.0f, 270.0f, 0.0f);
                     m_rigidbody.velocity = new Vector3(-speed * Time.fixedDeltaTime, m_rigidbody.velocity.y, 0.0f);
                 }                
@@ -132,7 +120,6 @@ public class PlayerManager : MonoBehaviour
                         m_animator.Play("Skip");
                         speed = walkspeed;
                     }
-                    m_direction = 3;
                     transform.eulerAngles = new Vector3(0.0f, 0.0f, 0.0f);
                     m_rigidbody.velocity = new Vector3(0.0f, m_rigidbody.velocity.y, speed * Time.fixedDeltaTime);
                 }
@@ -150,7 +137,6 @@ public class PlayerManager : MonoBehaviour
                         m_animator.Play("Skip");
                         speed = walkspeed;
                     }
-                    m_direction = 4;
                     transform.eulerAngles = new Vector3(0.0f, 180.0f, 0.0f);
                     m_rigidbody.velocity = new Vector3(0.0f, m_rigidbody.velocity.y, -speed * Time.fixedDeltaTime);
                 }
@@ -159,40 +145,6 @@ public class PlayerManager : MonoBehaviour
             {
                 m_animator.Play("Idle");
                 m_rigidbody.velocity = new Vector3(0.0f, m_rigidbody.velocity.y, 0.0f);    
-            }            
-
-            //Dash
-            if (m_dash && m_direction == 1)//Right
-            {
-                m_animator.Play("Roll");
-                m_dash = false;
-                m_dashTime = startDashTime;
-                m_rigidbody.velocity = new Vector3(dashSpeed * Time.fixedDeltaTime, m_rigidbody.velocity.y, 0.0f);
-            }            
-            else if (m_dash && m_direction == 2) //Left
-            {
-                m_animator.Play("Roll");
-                m_dash = false;
-                m_dashTime = startDashTime;
-                m_rigidbody.velocity = new Vector3(-dashSpeed * Time.fixedDeltaTime, m_rigidbody.velocity.y, 0.0f);
-            }
-            else if (m_dash && m_direction == 3)//Up
-            {
-                m_animator.Play("Roll");
-                m_dash = false;
-                m_dashTime = startDashTime;
-                m_rigidbody.velocity = new Vector3(0.0f, m_rigidbody.velocity.y, dashSpeed * Time.fixedDeltaTime);
-            }
-            else if (m_dash && m_direction == 4)//Down
-            {
-                m_animator.Play("Roll");
-                m_dash = false;
-                m_dashTime = startDashTime;
-                m_rigidbody.velocity = new Vector3(0.0f, m_rigidbody.velocity.y, -dashSpeed * Time.fixedDeltaTime);
-            }
-            else
-            {
-                m_dashTime -= Time.deltaTime;
             }
 
             //Thrust

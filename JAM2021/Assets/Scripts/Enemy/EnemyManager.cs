@@ -23,6 +23,7 @@ public class EnemyManager : MonoBehaviour
 
     public Transform[] target;
     public Transform playerTarget;
+    public EnemyAttackManager enemyAttackManager;
 
     public int healt = 3;
 
@@ -95,18 +96,12 @@ public class EnemyManager : MonoBehaviour
             //Attack
             case EnemyManager.State.Attack:
 
-                int m_randomAttack = Random.Range(0, 1);
+                 m_animator.Play("Attack");
 
-                m_attackTimer -= Time.deltaTime;
-
-                if (m_randomAttack == 0 && m_attackTimer <= 0.0f)
+                if (m_animator.GetCurrentAnimatorStateInfo(0).IsName("Attack") && m_animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1.0f)
                 {
-                    m_animator.Play("Attack");
+                    m_state = EnemyManager.State.Run;
                 }
-                else if(m_attackTimer <= 0.0f)
-                {
-                    m_animator.Play("Attack2");
-                }                
 
                 break;
 
@@ -158,6 +153,11 @@ public class EnemyManager : MonoBehaviour
             m_skip = false;
             m_child = 0;
             m_agent.SetDestination(playerTarget.position);
+
+            if (enemyAttackManager.attackTrigger)
+            {
+                m_state = EnemyManager.State.Attack;
+            }
         }
         else
         {
