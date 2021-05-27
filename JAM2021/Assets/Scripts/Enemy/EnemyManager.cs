@@ -152,6 +152,7 @@ public class EnemyManager : MonoBehaviour
         {
             m_skip = false;
             m_child = 0;
+
             m_agent.SetDestination(playerTarget.position);
 
             if (enemyAttackManager.attackTrigger)
