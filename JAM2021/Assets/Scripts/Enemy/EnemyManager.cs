@@ -156,6 +156,7 @@ public class EnemyManager : MonoBehaviour
 
             m_agent.SetDestination(playerTarget.position);
 
+
             if (enemyAttackManager.attackTrigger)
             {
                 m_state = EnemyManager.State.Attack;
