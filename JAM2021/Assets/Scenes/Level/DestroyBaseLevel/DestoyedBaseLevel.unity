@@ -458,18 +458,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 3465161408552995339, guid: ea14b8f061a80d448b8e8183449cd098, type: 3}
-      propertyPath: m_StaticEditorFlags
-      value: 8
-      objectReference: {fileID: 0}
-    - target: {fileID: 4384201600492043996, guid: ea14b8f061a80d448b8e8183449cd098, type: 3}
-      propertyPath: m_StaticEditorFlags
-      value: 8
-      objectReference: {fileID: 0}
-    - target: {fileID: 5592188781124055762, guid: ea14b8f061a80d448b8e8183449cd098, type: 3}
-      propertyPath: m_StaticEditorFlags
-      value: 8
-      objectReference: {fileID: 0}
     - target: {fileID: 6648132981589565085, guid: ea14b8f061a80d448b8e8183449cd098, type: 3}
       propertyPath: m_Name
       value: Dormitorio_Rotto
