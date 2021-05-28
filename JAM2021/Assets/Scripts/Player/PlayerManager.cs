@@ -52,6 +52,7 @@ public class PlayerManager : MonoBehaviour
     public DialogManager m_dialog;
 
     public GameObject Dialog;
+    public GameObject Pause;
 
 
     void Awake()
@@ -78,8 +79,9 @@ public class PlayerManager : MonoBehaviour
             if (m_inputManager.interact)
             {
                 m_animator.Play("Idle");
-                Dialog.SetActive(true);
-                m_dialog.DialogStart();                
+                if (Dialog != null) { Dialog.SetActive(true);}                
+                if (m_dialog != null) { m_dialog.DialogStart(); }
+                                
             }
         }
 
@@ -168,6 +170,10 @@ public class PlayerManager : MonoBehaviour
                 {
                     m_animator.Play("Idle");
                     m_rigidbody.velocity = new Vector3(0.0f, 0.0f, 0.0f);
+                    if (m_inputManager.pause)
+                    {
+                        Pause.SetActive(true);
+                    }
                 }
 
                 //Attack
@@ -222,13 +228,13 @@ public class PlayerManager : MonoBehaviour
     {
         if (collision.gameObject.tag == "Enemy")
         {
-            m_hitPoint += m_enemyManager.damage;
+            if (m_enemyManager != null) { m_hitPoint += m_enemyManager.damage;}            
 
             if (m_hitPoint < m_healthManager.numOfHearts)
             {
                 m_animator.Play("Hit");
 
-                healtBar.SetHealth(m_healthManager.Health);
+                if (healtBar != null) { healtBar.SetHealth(m_healthManager.Health); }                
                 m_healthManager.Health -= m_enemyManager.damage;
 
                 m_state = PlayerManager.State.Hit;

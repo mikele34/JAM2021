@@ -92,4 +92,15 @@ public class GameManager : MonoBehaviour
         Earn_popUp.SetActive(false);
         sceneFader.FadeTo(levelToLoad);
     }
+
+    public void Menu()
+    {
+        levelToLoad = "Menu";
+        sceneFader.FadeTo(levelToLoad);
+    }
+
+    public void Close()
+    {
+        playerManager.Pause.SetActive(false);
+    }
 }
