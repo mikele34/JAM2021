@@ -577,9 +577,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1ef1b4be79bb75c47b9747d5d23ed2a0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  logNumber: {fileID: 1805666913}
-  screwNumber: {fileID: 1805666912}
-  floorNumber: {fileID: 1805666911}
 --- !u!4 &398643556
 Transform:
   m_ObjectHideFlags: 0
@@ -608,6 +605,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Timer: {fileID: 74982718}
   sceneFader: {fileID: 783241449}
+  Left_popUp: {fileID: 788922748}
+  Death_popUp: {fileID: 473160764}
+  Earn_popUp: {fileID: 270781310}
+  playerManager: {fileID: 0}
+  m_logDrop: 30
+  m_logDrop2: 15
+  m_forest: 0
+  m_forestLeft: 0
 --- !u!1 &473160764
 GameObject:
   m_ObjectHideFlags: 0
@@ -2095,7 +2100,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 50
+  m_Text: 10
 --- !u!222 &1501856751
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -2424,39 +2429,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 1911897468055934936, guid: e19f1b58275ba014ba693ddcd020c94c, type: 3}
   m_PrefabInstance: {fileID: 1805666909}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &1805666911 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 1911897468197952008, guid: e19f1b58275ba014ba693ddcd020c94c, type: 3}
-  m_PrefabInstance: {fileID: 1805666909}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5f7201a12d95ffc409449d95f23cf332, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &1805666912 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 1911897468917565285, guid: e19f1b58275ba014ba693ddcd020c94c, type: 3}
-  m_PrefabInstance: {fileID: 1805666909}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5f7201a12d95ffc409449d95f23cf332, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &1805666913 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 1911897469061923570, guid: e19f1b58275ba014ba693ddcd020c94c, type: 3}
-  m_PrefabInstance: {fileID: 1805666909}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5f7201a12d95ffc409449d95f23cf332, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &1825396458
 GameObject:
   m_ObjectHideFlags: 0
@@ -2869,10 +2841,22 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 8275447989483860344, guid: fc371855597e16143ba03b04293bf777, type: 3}
+      propertyPath: Health
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8275447989483860344, guid: fc371855597e16143ba03b04293bf777, type: 3}
+      propertyPath: numOfHearts
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8275447989483860347, guid: fc371855597e16143ba03b04293bf777, type: 3}
       propertyPath: healtBar
       value: 
       objectReference: {fileID: 208412970}
+    - target: {fileID: 8275447989483860347, guid: fc371855597e16143ba03b04293bf777, type: 3}
+      propertyPath: sceneFader
+      value: 
+      objectReference: {fileID: 783241449}
     - target: {fileID: 8275447989483860347, guid: fc371855597e16143ba03b04293bf777, type: 3}
       propertyPath: m_enemyManager
       value: 
