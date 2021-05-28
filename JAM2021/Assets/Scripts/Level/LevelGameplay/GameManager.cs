@@ -13,16 +13,17 @@ public class GameManager : MonoBehaviour
     public GameObject Earn_popUp;
     public PlayerManager playerManager;
 
-    float m_timer = 1000.0f;
+    float m_timer = 1.0f;
 
     public int m_logDrop = 30;
     public int m_logDrop2 = 15;
     public int m_alive = 3;
 
     bool m_timerStart = true;
-    public bool m_forest = false;
-    
+
+    [HideInInspector]public bool m_forest = false;    
     [HideInInspector]public bool m_forestLeft = false;
+    [HideInInspector]public bool m_forestEarn = false;
 
     string levelToLoad = "BaseLevel";
 
@@ -39,6 +40,8 @@ public class GameManager : MonoBehaviour
 
     void Update()
     {
+        Debug.Log(playerManager.death);
+
         if (m_timerStart)
         {
             m_timer -= Time.deltaTime;
@@ -64,12 +67,12 @@ public class GameManager : MonoBehaviour
 
         if (playerManager.death)
         {
-            Debug.Log("mortacci tua");
             Death_popUp.SetActive(true);
         }
 
         if (m_alive == 0)
         {
+            m_forestEarn = true;
             Earn_popUp.SetActive(true);
         }
     }
