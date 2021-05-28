@@ -430,6 +430,17 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2a0b02058528bfb46a1620994c574369, type: 3}
+--- !u!114 &472616511 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5390712234741011680, guid: 2a0b02058528bfb46a1620994c574369, type: 3}
+  m_PrefabInstance: {fileID: 472616510}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f7b75e57d65ac994482489a00441a493, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &543237900
 GameObject:
   m_ObjectHideFlags: 0
@@ -532,9 +543,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 472616511}
         m_TargetAssemblyTypeName: GameManager, Assembly-CSharp
-        m_MethodName: Menu
+        m_MethodName: Gohome
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1538,7 +1549,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 472616511}
         m_TargetAssemblyTypeName: GameManager, Assembly-CSharp
         m_MethodName: Close
         m_Mode: 1

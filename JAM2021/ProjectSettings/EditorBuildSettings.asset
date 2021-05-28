@@ -29,5 +29,8 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Level/BaseLevel/BaseLevel.unity
     guid: 0179b04167c77cb49911465971e98428
+  - enabled: 1
+    path: Assets/Scenes/Level/CityLevel/City.unity
+    guid: 6da5c8d5c0995f44196bb18844d126b8
   m_configObjects:
     com.unity.input.settings: {fileID: 11400000, guid: 6f88b377c93d7f24f94421ebcdbc37db, type: 2}
