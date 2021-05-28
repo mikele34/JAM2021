@@ -13,7 +13,7 @@ public class GameManager : MonoBehaviour
     public GameObject Earn_popUp;
     public PlayerManager playerManager;
 
-    float m_timer = 1.0f;
+    float m_timer = 120.0f;
 
     public int m_logDrop = 30;
     public int m_logDrop2 = 15;
