@@ -16,10 +16,12 @@ public class EnemyManager : MonoBehaviour
     }
 
     EnemyManager.State m_state = EnemyManager.State.Idle;
+
     NavMeshAgent m_agent;
     Animator m_animator;
     BoxCollider m_boxCollider;
     CapsuleCollider m_capsuleCollider;
+    GameManager m_gameManager;
 
     public Transform[] target;
     public Transform playerTarget;
@@ -32,6 +34,7 @@ public class EnemyManager : MonoBehaviour
 
     bool m_skip = false;
     bool m_trigger = false;
+    bool m_alive = true;
 
     int m_child = 0;
 
@@ -41,7 +44,9 @@ public class EnemyManager : MonoBehaviour
         m_animator = GetComponent<Animator>();
         m_agent = GetComponent<NavMeshAgent>();
         m_boxCollider = GetComponent<BoxCollider>();
-        m_capsuleCollider = GetComponent<CapsuleCollider>();        
+        m_capsuleCollider = GetComponent<CapsuleCollider>();
+
+        m_gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
     }
 
     void Update()
@@ -124,6 +129,12 @@ public class EnemyManager : MonoBehaviour
             //Death
             case EnemyManager.State.Death:
 
+                if (m_alive)
+                {
+                    m_gameManager.m_alive--;
+                    m_alive = false;
+                }
+
                 m_animator.Play("Death");
                 m_agent.SetDestination(transform.position);
                 m_trigger = false;
@@ -181,6 +192,7 @@ public class EnemyManager : MonoBehaviour
             m_state = EnemyManager.State.Death;
         }
     }
+
 
     void skip()
     {

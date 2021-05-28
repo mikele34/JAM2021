@@ -32,7 +32,6 @@ public class InventoryManager : MonoBehaviour
     void Forest()
     {
         log += m_gameManager.m_logDrop2;
-        Debug.Log(log);
         m_gameManager.m_forestLeft = false;
         m_gameManager.m_forest = false;
     }

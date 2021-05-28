@@ -611,6 +611,7 @@ MonoBehaviour:
   playerManager: {fileID: 0}
   m_logDrop: 30
   m_logDrop2: 15
+  m_alive: 1
   m_forest: 0
   m_forestLeft: 0
 --- !u!1 &473160764
@@ -2847,7 +2848,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8275447989483860344, guid: fc371855597e16143ba03b04293bf777, type: 3}
       propertyPath: numOfHearts
-      value: 1
+      value: 100
       objectReference: {fileID: 0}
     - target: {fileID: 8275447989483860347, guid: fc371855597e16143ba03b04293bf777, type: 3}
       propertyPath: healtBar
