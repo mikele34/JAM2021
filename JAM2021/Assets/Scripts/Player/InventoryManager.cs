@@ -5,13 +5,16 @@ using UnityEngine.UI;
 
 public class InventoryManager : MonoBehaviour
 {
-    public Text logNumber;
-    public Text screwNumber;
-    public Text floorNumber;
+    public static Text logNumber;
+    public static Text screwNumber;
+    public static Text floorNumber;
 
+    public static int m_log;
 
     void Update()
     {
-        
+        Debug.Log(m_log.ToString());
+
+        logNumber.text = m_log.ToString();
     }
 }
