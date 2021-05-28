@@ -12,16 +12,16 @@ public class InventoryManager : MonoBehaviour
     public Text floorNumber;
     
     public Text logNumberLeft;
-    //public Text screwNumberLeft;
-    //public Text floorNumberLeft;
+    public Text screwNumberLeft;
+    public Text floorNumberLeft;
 
     public Text logNumbertot;
-    //public Text screwNumbertot;
-    //public Text floorNumbertot;
+    public Text screwNumbertot;
+    public Text floorNumbertot;
 
-    public static int log;
-    public static int screw;
-    public static int floor;
+    public static int log = 0;
+    public static int screw = 0;
+    public static int floor = 0;
 
     void Update()
     {
@@ -29,18 +29,18 @@ public class InventoryManager : MonoBehaviour
         {
             Forest();
         }
+        
+        if (logNumber != null) { logNumber.text = log.ToString(); }
+        if (logNumberLeft != null) { logNumberLeft.text = log.ToString(); }        
+        if (logNumbertot != null) { logNumbertot.text = log.ToString(); }
 
-        logNumber.text = log.ToString();
-        logNumberLeft.text = log.ToString();
-        logNumbertot.text = log.ToString();
+        if (screwNumber != null) { screwNumber.text = screw.ToString(); }
+        if (screwNumberLeft != null) { screwNumberLeft.text = screw.ToString(); }
+        if (screwNumbertot != null) { screwNumbertot.text = screw.ToString(); }
 
-        screwNumber.text = screw.ToString();
-        //screwNumberLeft.text = screw.ToString();
-        //screwNumbertot.text = screw.ToString();
-
-        floorNumber.text = floor.ToString();
-        //floorNumberLeft.text = floor.ToString();
-        //floorNumbertot.text = floor.ToString();
+        if (floorNumber != null) { floorNumber.text = floor.ToString(); }
+        if (floorNumber != null) { floorNumberLeft.text = floor.ToString(); }
+        if (floorNumbertot != null) { floorNumbertot.text = floor.ToString(); }
     }
 
     void Forest()
@@ -55,6 +55,7 @@ public class InventoryManager : MonoBehaviour
         }
         
         m_gameManager.m_forestLeft = false;
+        m_gameManager.m_forestEarn = false;
         m_gameManager.m_forest = false;
     }
 }

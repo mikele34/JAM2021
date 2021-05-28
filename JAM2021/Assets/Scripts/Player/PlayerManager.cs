@@ -20,7 +20,6 @@ public class PlayerManager : MonoBehaviour
 
     string levelToLoad = "DormIN";
 
-
     static public bool m_first = true;
     public bool death = false;
 
@@ -40,7 +39,9 @@ public class PlayerManager : MonoBehaviour
 
     float speed = 300.0f;
 
-    int m_hitPoint = 0; 
+    int m_hitPoint = 0;
+
+    public bool interact = false;
 
     Rigidbody m_rigidbody;
     Animator m_animator;
@@ -48,7 +49,10 @@ public class PlayerManager : MonoBehaviour
     HealthManager  m_healthManager;
     BoxCollider m_macheteBox;
 
-    
+    public DialogManager m_dialog;
+
+    public GameObject Dialog;
+
 
     void Awake()
     {
@@ -68,6 +72,18 @@ public class PlayerManager : MonoBehaviour
 
     void Update()
     {
+        RaycastHit hitNpc;  //Raycast per interazione con l'npc dove il layer 3 è assegnato all'npc
+        if (Physics.Raycast(new Vector3(transform.position.x, transform.position.y + 3f, transform.position.z), transform.TransformDirection(Vector3.forward),out hitNpc, 5.0f, 1 << 6))
+        {
+            if (m_inputManager.interact)
+            {
+                m_animator.Play("Idle");
+                Dialog.SetActive(true);
+                m_dialog.DialogStart();                
+            }
+        }
+
+
         switch (m_state)
         {
             //Move
@@ -223,5 +239,11 @@ public class PlayerManager : MonoBehaviour
                 m_state = PlayerManager.State.Death;
             }
         }
+    }
+
+    void OnDrawGizmos()
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawRay(new Vector3(transform.position.x, transform.position.y + 3f, transform.position.z), transform.TransformDirection(Vector3.forward) * 5.0f);
     }
 }

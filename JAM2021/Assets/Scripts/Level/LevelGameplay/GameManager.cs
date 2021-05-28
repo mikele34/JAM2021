@@ -40,8 +40,6 @@ public class GameManager : MonoBehaviour
 
     void Update()
     {
-        Debug.Log(playerManager.death);
-
         if (m_timerStart)
         {
             m_timer -= Time.deltaTime;

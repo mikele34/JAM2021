@@ -9,6 +9,7 @@ public class inputManager : MonoBehaviour
     [HideInInspector] public bool walkDown = false;
     [HideInInspector] public bool attack = false;
     [HideInInspector] public bool run = false;
+    [HideInInspector] public bool interact = false;
     
 
     void Update()
@@ -18,10 +19,9 @@ public class inputManager : MonoBehaviour
         bool GP_rightdpad = false;
         bool GP_updpad = false;
         bool GP_downdpad = false;
-
-
         bool GP_shoot = false;
         bool GP_run = false;
+        bool GP_interact = false;
         
 
         if(Gamepad.all.Count > 0)
@@ -33,6 +33,7 @@ public class inputManager : MonoBehaviour
             
             GP_run = Gamepad.all[0].aButton.isPressed;
             GP_shoot = Gamepad.all[0].xButton.wasPressedThisFrame;
+            GP_interact = Gamepad.all[0].bButton.wasPressedThisFrame;
         }
 
         //Right
@@ -93,6 +94,16 @@ public class inputManager : MonoBehaviour
         else
         {
             attack = false;
+        }
+        
+        //Interact
+        if (Keyboard.current.eKey.wasPressedThisFrame || GP_interact)
+        {
+            interact = true;
+        }
+        else
+        {
+            interact = false;
         }
     }
 }
