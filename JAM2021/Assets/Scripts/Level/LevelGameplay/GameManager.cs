@@ -11,14 +11,17 @@ public class GameManager : MonoBehaviour
     public GameObject Left_popUp;
     public GameObject Death_popUp;
     public GameObject Earn_popUp;
+    public PlayerManager playerManager;
 
-    float m_timer = 2.0f;
+    float m_timer = 1.0f;
 
-    int m_logDrop = 30;
-    int m_logDrop2 = 15;
+    public int m_logDrop = 30;
+    public int m_logDrop2 = 15;
 
     bool m_timerStart = true;
-    bool m_forest = false;
+    public bool m_forest = false;
+    
+    [HideInInspector]public bool m_forestLeft = false;
 
     string levelToLoad = "BaseLevel";
 
@@ -53,8 +56,14 @@ public class GameManager : MonoBehaviour
 
             if (m_forest)
             {
-                Forest();
+                m_forestLeft = true;
+                Left_popUp.SetActive(true);
             }                      
+        }
+
+        if (playerManager.death)
+        {
+            Death_popUp.SetActive(true);
         }
     }
 
@@ -66,17 +75,12 @@ public class GameManager : MonoBehaviour
         float seconds = Mathf.FloorToInt(timeToDisplay % 60);
 
         Timer.text = string.Format("{0:00}:{1:00}", minutes, seconds);
-    }
-
-    void Forest()
-    {
-        InventoryManager.m_log += m_logDrop2;
-        Left_popUp.SetActive(true);
-        m_forest = false;
-    }
+    }    
 
     public void Gohome()
     {
+        Left_popUp.SetActive(false);
+        Death_popUp.SetActive(false);
         sceneFader.FadeTo(levelToLoad);
     }
 }

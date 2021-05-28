@@ -16,9 +16,13 @@ public class PlayerManager : MonoBehaviour
 
     public BarHealthManager healtBar;
     public EnemyManager m_enemyManager;
+    public SceneFader sceneFader;
+
+    string levelToLoad = "DormIN";
 
 
     static public bool m_first = true;
+    public bool death = false;
 
     [Header("Movement")]
     public float walkspeed = 300.0f;
@@ -57,6 +61,8 @@ public class PlayerManager : MonoBehaviour
         m_animator = GetComponent<Animator>();
         m_healthManager = GetComponent<HealthManager>();
         healtBar.SetMaxHealth(m_healthManager.numOfHearts);
+
+        death = false;
     }
 
 
@@ -185,9 +191,11 @@ public class PlayerManager : MonoBehaviour
             //Death
             case PlayerManager.State.Death:
 
+                death = true;
+
                 if (m_animator.GetCurrentAnimatorStateInfo(0).IsName("Death") && m_animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1.0f)
                 {
-                    SceneManager.LoadScene("SampleScene");
+                    sceneFader.FadeTo(levelToLoad);
                 }
 
                 break;

@@ -5,16 +5,35 @@ using UnityEngine.UI;
 
 public class InventoryManager : MonoBehaviour
 {
+    GameManager m_gameManager;
+
     public static Text logNumber;
     public static Text screwNumber;
     public static Text floorNumber;
 
-    public static int m_log;
+    public static int log;
+
+    void Awake()
+    {
+        m_gameManager = GameObject.Find("GameManager").GetComponent<GameManager>(); 
+    }
+
 
     void Update()
     {
-        Debug.Log(m_log.ToString());
+        if (m_gameManager.m_forestLeft)
+        {
+            Forest();
+        }
 
-        logNumber.text = m_log.ToString();
+        //logNumber.text = log.ToString();
+    }
+
+    void Forest()
+    {
+        log += m_gameManager.m_logDrop2;
+        Debug.Log(log);
+        m_gameManager.m_forestLeft = false;
+        m_gameManager.m_forest = false;
     }
 }
